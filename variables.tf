@@ -21,7 +21,3 @@ variable s3_bucket {
 variable version {
   default = "1.0.0"
 }
-
-variable SLACK_HOOK_URL {
-  default = ""
-}

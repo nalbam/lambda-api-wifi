@@ -47,7 +47,6 @@ module "dev-api-wifi" {
 
   env_vars = {
     PROFILE        = "${var.stage}"
-    SLACK_HOOK_URL = "${var.SLACK_HOOK_URL}"
     DYNAMODB_TABLE = "${var.stage}-${var.name}"
   }
 }
