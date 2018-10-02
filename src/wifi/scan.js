@@ -6,7 +6,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.scan = (event, context, callback) => {
     const data = event.queryStringParameters;
-    if (typeof data.mac !== 'string' || typeof data.checked !== 'string') {
+    if (typeof data.mac !== 'string') {
         console.error('Validation Failed');
         callback(null, {
             statusCode: 400,
@@ -19,10 +19,9 @@ module.exports.scan = (event, context, callback) => {
 
     const params = {
         TableName: process.env.DYNAMODB_TABLE,
-        FilterExpression: 'mac = :mac and checked = :checked',
+        FilterExpression: 'mac = :mac',
         ExpressionAttributeValues: {
             ':mac': data.mac,
-            ':checked': (data.checked === 'true'),
         },
     };
 

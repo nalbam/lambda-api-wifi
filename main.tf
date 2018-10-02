@@ -52,5 +52,5 @@ module "dev-api-wifi" {
 }
 
 output "url" {
-  value = "https://${module.dev-api-wifi.domain}/sms"
+  value = "https://${module.dev-api-wifi.domain}/wifi"
 }
