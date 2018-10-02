@@ -41,7 +41,7 @@ function processEvent(event, callback) {
         username: 'sms',
         icon_emoji: ':vibration_mode:',
         attachments: [{
-            title: body.phone_number,
+            title: body.mac,
             text: body.message,
             footer: body.id,
         }]

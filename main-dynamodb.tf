@@ -5,7 +5,7 @@ resource "aws_dynamodb_table" "dynamodb" {
   read_capacity  = 10
   write_capacity = 10
   hash_key       = "id"
-  range_key      = "mac_addr"
+  range_key      = "mac"
 
   attribute {
     name = "id"
@@ -13,7 +13,7 @@ resource "aws_dynamodb_table" "dynamodb" {
   }
 
   attribute {
-    name = "phone_number"
+    name = "mac"
     type = "S"
   }
 

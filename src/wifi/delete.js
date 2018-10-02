@@ -6,7 +6,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.delete = (event, context, callback) => {
     const param = event.queryStringParameters;
-    if (typeof param.phone_number !== 'string') {
+    if (typeof param.mac !== 'string') {
         console.error('Validation Failed');
         callback(null, {
             statusCode: 400,
@@ -23,7 +23,7 @@ module.exports.delete = (event, context, callback) => {
         TableName: process.env.DYNAMODB_TABLE,
         Key: {
             id: arr[2],
-            phone_number: param.phone_number,
+            mac: param.mac,
         },
     };
 
