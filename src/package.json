@@ -1,0 +1,11 @@
+{
+  "name": "lambda-api-wifi",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npm install -s"
+  },
+  "dependencies": {
+    "uuid": "^2.0.3"
+  }
+}
