@@ -45,6 +45,7 @@ module.exports.create = (event, context, callback) => {
                 Item: {
                     mac: data.mac,
                     desc: data.desc,
+                    checked: false,
                     createdAt: timestamp,
                 },
             };
