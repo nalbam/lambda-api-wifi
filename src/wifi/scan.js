@@ -6,20 +6,10 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.scan = (event, context, callback) => {
     const data = event.queryStringParameters;
-    // if (typeof data.mac !== 'string') {
-    //     console.error('Validation Failed.');
-    //     callback(null, {
-    //         statusCode: 400,
-    //         body: {
-    //             error: 'Validation Failed.'
-    //         },
-    //     });
-    //     return;
-    // }
 
     let params;
 
-    if (!data.mac) {
+    if (typeof data.mac !== 'string') {
         params = {
             TableName: process.env.MAIN_TABLE,
         };
