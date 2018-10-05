@@ -72,7 +72,7 @@ module.exports.create = (event, context, callback) => {
                 callback(null, response);
             });
         } else {
-            if (result.Item.ip && result.Item.ip !== data.ip) {
+            if (!result.Item.ip || result.Item.ip !== data.ip) {
                 const params = {
                     TableName: process.env.MAIN_TABLE,
                     Key: {
