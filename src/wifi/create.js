@@ -7,7 +7,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.create = (event, context, callback) => {
     const data = JSON.parse(event.body);
-    if (typeof data.message !== 'string') {
+    if (typeof data.mac !== 'string') {
         console.error('Validation Failed');
         callback(null, {
             statusCode: 400,
