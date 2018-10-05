@@ -37,7 +37,7 @@ module.exports.create = (event, context, callback) => {
             return;
         }
 
-        if (result && result.Item && result.Item.checked === false) {
+        if (result && result.Item && result.Item.checked === true) {
             const timestamp = new Date().getTime();
 
             const params = {
@@ -71,16 +71,15 @@ module.exports.create = (event, context, callback) => {
                 };
                 callback(null, response);
             });
+        } else {
+            // response
+            console.error(`"${data.mac}" is false`);
+            callback(null, {
+                statusCode: 400,
+                body: {
+                    error: `"${data.mac}" is false`
+                },
+            });
         }
-
-        // response
-        console.error(`"${data.mac}" is false`);
-        callback(null, {
-            statusCode: 400,
-            body: {
-                error: `"${data.mac}" is false`
-            },
-        });
-        return;
     });
 };
