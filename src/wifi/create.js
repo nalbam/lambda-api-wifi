@@ -51,7 +51,7 @@ module.exports.create = (event, context, callback) => {
                 },
             };
 
-            // write the wifi-scan to the database
+            // write the wifi-main to the database
             dynamoDb.put(params, (error) => {
                 // handle potential errors
                 if (error) {
@@ -71,48 +71,73 @@ module.exports.create = (event, context, callback) => {
                 };
                 callback(null, response);
             });
-        } else if (result.Item.checked === false) {
-            // response
-            console.error(`"${data.mac}" is false`);
-            callback(null, {
-                statusCode: 400,
-                body: {
-                    error: `"${data.mac}" is false`
-                },
-            });
-            return;
         } else {
-            const params = {
-                TableName: process.env.SCAN_TABLE,
-                Item: {
-                    id: uuid.v1(),
-                    mac: data.mac,
-                    ip: data.ip,
-                    desc: data.desc,
-                    createdAt: timestamp,
-                },
-            };
-
-            // write the wifi-scan to the database
-            dynamoDb.put(params, (error) => {
-                // handle potential errors
-                if (error) {
-                    console.error(error);
-                    callback(null, {
-                        statusCode: error.statusCode || 501,
-                        body: error,
-                    });
-                    return;
-                }
-
-                // create a response
-                console.log('saved. ', params.Item);
-                const response = {
-                    statusCode: 200,
-                    body: JSON.stringify(params.Item),
+            if (result.Item.ip && result.Item.ip !== data.ip) {
+                const params = {
+                    TableName: process.env.MAIN_TABLE,
+                    Key: {
+                        mac: data.mac,
+                    },
+                    UpdateExpression: 'SET ip = :ip, updatedAt = :updatedAt',
+                    ExpressionAttributeValues: {
+                        ':ip': data.ip,
+                        ':updatedAt': timestamp,
+                    },
+                    ReturnValues: 'ALL_NEW',
                 };
-                callback(null, response);
-            });
+
+                // update the wifi-main in the database
+                dynamoDb.update(params, (error, result) => {
+                    // handle potential errors
+                    if (error) {
+                        console.error(error);
+                    }
+                    console.log(`"${data.mac}" : "${data.ip}"`);
+                });
+            }
+
+            if (result.Item.checked === false) {
+                // response
+                console.log(`"${data.mac}" is false`);
+                callback(null, {
+                    statusCode: 200,
+                    body: {
+                        body: `"${data.mac}" is false`
+                    },
+                });
+            } else {
+                const params = {
+                    TableName: process.env.SCAN_TABLE,
+                    Item: {
+                        id: uuid.v1(),
+                        mac: data.mac,
+                        ip: data.ip,
+                        desc: data.desc,
+                        createdAt: timestamp,
+                    },
+                };
+
+                // write the wifi-scan to the database
+                dynamoDb.put(params, (error) => {
+                    // handle potential errors
+                    if (error) {
+                        console.error(error);
+                        callback(null, {
+                            statusCode: error.statusCode || 501,
+                            body: error,
+                        });
+                        return;
+                    }
+
+                    // create a response
+                    console.log('saved. ', params.Item);
+                    const response = {
+                        statusCode: 200,
+                        body: JSON.stringify(params.Item),
+                    };
+                    callback(null, response);
+                });
+            }
         }
     });
 };
