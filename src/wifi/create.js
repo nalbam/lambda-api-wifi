@@ -21,7 +21,7 @@ module.exports.create = (event, context, callback) => {
     const timestamp = new Date().getTime();
 
     const params = {
-        TableName: process.env.DYNAMODB_TABLE,
+        TableName: process.env.SCAN_TABLE,
         Item: {
             id: uuid.v1(),
             ip: data.ip,

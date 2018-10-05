@@ -21,7 +21,7 @@ module.exports.update = (event, context, callback) => {
     const timestamp = new Date().getTime();
 
     const params = {
-        TableName: process.env.DYNAMODB_TABLE,
+        TableName: process.env.SCAN_TABLE,
         Key: {
             id: arr[2],
             mac: data.mac,

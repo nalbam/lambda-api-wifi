@@ -20,7 +20,7 @@ module.exports.get = (event, context, callback) => {
     const arr = event.path.split('/');
 
     const params = {
-        TableName: process.env.DYNAMODB_TABLE,
+        TableName: process.env.SCAN_TABLE,
         Key: {
             id: arr[2],
             mac: param.mac,

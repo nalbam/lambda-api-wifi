@@ -18,7 +18,7 @@ module.exports.scan = (event, context, callback) => {
     }
 
     const params = {
-        TableName: process.env.DYNAMODB_TABLE,
+        TableName: process.env.SCAN_TABLE,
         FilterExpression: 'mac = :mac',
         ExpressionAttributeValues: {
             ':mac': data.mac,

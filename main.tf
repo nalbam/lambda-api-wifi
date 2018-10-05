@@ -46,8 +46,9 @@ module "dev-api-wifi" {
   # dynamodb = "${var.stage}-${var.name}"
 
   env_vars = {
-    PROFILE        = "${var.stage}"
-    DYNAMODB_TABLE = "${var.stage}-${var.name}"
+    PROFILE    = "${var.stage}"
+    MAIN_TABLE = "${var.stage}-${var.name}-main"
+    SCAN_TABLE = "${var.stage}-${var.name}-scan"
   }
 }
 
