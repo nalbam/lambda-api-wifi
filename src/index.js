@@ -3,7 +3,6 @@
 const create = require('./wifi/create').create;
 const update = require('./wifi/update').update;
 const scan = require('./wifi/scan').scan;
-const get = require('./wifi/get').get;
 
 exports.handler = (event, context, callback) => {
     console.log('## handler event : ', JSON.stringify(event, null, 2));
