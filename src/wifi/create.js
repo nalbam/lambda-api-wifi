@@ -18,6 +18,10 @@ module.exports.create = (event, context, callback) => {
         return;
     }
 
+    if (data.desc && data.desc === '(Unknown)') {
+        data.desc = '-';
+    }
+
     const params = {
         TableName: process.env.MAIN_TABLE,
         Key: {
