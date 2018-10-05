@@ -44,6 +44,7 @@ module.exports.create = (event, context, callback) => {
                 TableName: process.env.MAIN_TABLE,
                 Item: {
                     mac: data.mac,
+                    ip: data.ip,
                     desc: data.desc,
                     checked: false,
                     createdAt: timestamp,
