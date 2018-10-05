@@ -26,13 +26,7 @@ resource "aws_dynamodb_table" "wifi-main" {
   name           = "${var.stage}-${var.name}-main"
   read_capacity  = 10
   write_capacity = 10
-  hash_key       = "id"
-  range_key      = "mac"
-
-  attribute {
-    name = "id"
-    type = "S"
-  }
+  hash_key       = "mac"
 
   attribute {
     name = "mac"

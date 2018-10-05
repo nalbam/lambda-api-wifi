@@ -6,8 +6,8 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.update = (event, context, callback) => {
     const data = JSON.parse(event.body);
-    if (typeof data.mac !== 'string' || typeof data.checked !== 'boolean') {
-        console.error('Validation Failed');
+    if (typeof data.mac !== 'string' || typeof data.name !== 'string' || typeof data.checked !== 'boolean') {
+        console.error('Validation Failed.');
         callback(null, {
             statusCode: 400,
             body: {
@@ -17,24 +17,23 @@ module.exports.update = (event, context, callback) => {
         return;
     }
 
-    const arr = event.path.split('/');
     const timestamp = new Date().getTime();
 
     const params = {
-        TableName: process.env.SCAN_TABLE,
+        TableName: process.env.MAIN_TABLE,
         Key: {
-            id: arr[2],
             mac: data.mac,
         },
-        UpdateExpression: 'SET checked = :checked, updatedAt = :updatedAt',
+        UpdateExpression: 'SET name = :name, checked = :checked, updatedAt = :updatedAt',
         ExpressionAttributeValues: {
+            ':name': data.name,
             ':checked': data.checked,
             ':updatedAt': timestamp,
         },
         ReturnValues: 'ALL_NEW',
     };
 
-    // update the sms in the database
+    // update the wifi-main in the database
     dynamoDb.update(params, (error, result) => {
         // handle potential errors
         if (error) {

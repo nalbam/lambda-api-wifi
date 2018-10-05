@@ -8,7 +8,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 module.exports.create = (event, context, callback) => {
     const data = JSON.parse(event.body);
     if (typeof data.mac !== 'string') {
-        console.error('Validation Failed');
+        console.error('Validation Failed.');
         callback(null, {
             statusCode: 400,
             body: {
@@ -18,23 +18,15 @@ module.exports.create = (event, context, callback) => {
         return;
     }
 
-    const timestamp = new Date().getTime();
-
     const params = {
-        TableName: process.env.SCAN_TABLE,
-        Item: {
-            id: uuid.v1(),
+        TableName: process.env.MAIN_TABLE,
+        Key: {
             mac: data.mac,
-            ip: data.ip,
-            desc: data.desc,
-            checked: false,
-            createdAt: timestamp,
-            updatedAt: timestamp,
         },
     };
 
-    // write the sms to the database
-    dynamoDb.put(params, (error) => {
+    // fetch wifi-main from the database
+    dynamoDb.get(params, (error, result) => {
         // handle potential errors
         if (error) {
             console.error(error);
@@ -45,11 +37,50 @@ module.exports.create = (event, context, callback) => {
             return;
         }
 
-        // create a response
-        const response = {
-            statusCode: 200,
-            body: JSON.stringify(params.Item),
-        };
-        callback(null, response);
+        if (result && result.Item && result.Item.checked === false) {
+            const timestamp = new Date().getTime();
+
+            const params = {
+                TableName: process.env.SCAN_TABLE,
+                Item: {
+                    id: uuid.v1(),
+                    mac: data.mac,
+                    ip: data.ip,
+                    desc: data.desc,
+                    createdAt: timestamp,
+                },
+            };
+
+            // write the wifi-scan to the database
+            dynamoDb.put(params, (error) => {
+                // handle potential errors
+                if (error) {
+                    console.error(error);
+                    callback(null, {
+                        statusCode: error.statusCode || 501,
+                        body: error,
+                    });
+                    return;
+                }
+
+                // create a response
+                console.log('Success.');
+                const response = {
+                    statusCode: 200,
+                    body: JSON.stringify(params.Item),
+                };
+                callback(null, response);
+            });
+        }
+
+        // response
+        console.error(`"${data.mac}" is false`);
+        callback(null, {
+            statusCode: 400,
+            body: {
+                error: `"${data.mac}" is false`
+            },
+        });
+        return;
     });
 };
