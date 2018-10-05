@@ -37,41 +37,18 @@ module.exports.create = (event, context, callback) => {
             return;
         }
 
-        if (result && result.Item && result.Item.checked === true) {
-            const timestamp = new Date().getTime();
-
-            const params = {
-                TableName: process.env.SCAN_TABLE,
-                Item: {
-                    id: uuid.v1(),
-                    mac: data.mac,
-                    ip: data.ip,
-                    desc: data.desc,
-                    createdAt: timestamp,
+        if (!result || !result.Item) {
+            // response
+            console.error(`"${data.mac}" is null`);
+            callback(null, {
+                statusCode: 400,
+                body: {
+                    error: `"${data.mac}" is null`
                 },
-            };
-
-            // write the wifi-scan to the database
-            dynamoDb.put(params, (error) => {
-                // handle potential errors
-                if (error) {
-                    console.error(error);
-                    callback(null, {
-                        statusCode: error.statusCode || 501,
-                        body: error,
-                    });
-                    return;
-                }
-
-                // create a response
-                console.log('Success.');
-                const response = {
-                    statusCode: 200,
-                    body: JSON.stringify(params.Item),
-                };
-                callback(null, response);
             });
-        } else {
+            return;
+        }
+        if (result.Item.checked === false) {
             // response
             console.error(`"${data.mac}" is false`);
             callback(null, {
@@ -80,6 +57,41 @@ module.exports.create = (event, context, callback) => {
                     error: `"${data.mac}" is false`
                 },
             });
+            return;
         }
+
+        const timestamp = new Date().getTime();
+
+        const params = {
+            TableName: process.env.SCAN_TABLE,
+            Item: {
+                id: uuid.v1(),
+                mac: data.mac,
+                ip: data.ip,
+                desc: data.desc,
+                createdAt: timestamp,
+            },
+        };
+
+        // write the wifi-scan to the database
+        dynamoDb.put(params, (error) => {
+            // handle potential errors
+            if (error) {
+                console.error(error);
+                callback(null, {
+                    statusCode: error.statusCode || 501,
+                    body: error,
+                });
+                return;
+            }
+
+            // create a response
+            console.log('Success.');
+            const response = {
+                statusCode: 200,
+                body: JSON.stringify(params.Item),
+            };
+            callback(null, response);
+        });
     });
 };
