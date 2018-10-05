@@ -18,7 +18,8 @@ module.exports.create = (event, context, callback) => {
         return;
     }
 
-    if (data.desc && data.desc === '(Unknown)') {
+    // Unknown
+    if (!data.desc || data.desc === '(Unknown)') {
         data.desc = '-';
     }
 
