@@ -6,24 +6,32 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.scan = (event, context, callback) => {
     const data = event.queryStringParameters;
-    if (typeof data.mac !== 'string') {
-        console.error('Validation Failed.');
-        callback(null, {
-            statusCode: 400,
-            body: {
-                error: 'Validation Failed.'
-            },
-        });
-        return;
-    }
+    // if (typeof data.mac !== 'string') {
+    //     console.error('Validation Failed.');
+    //     callback(null, {
+    //         statusCode: 400,
+    //         body: {
+    //             error: 'Validation Failed.'
+    //         },
+    //     });
+    //     return;
+    // }
 
-    const params = {
-        TableName: process.env.SCAN_TABLE,
-        FilterExpression: 'mac = :mac',
-        ExpressionAttributeValues: {
-            ':mac': data.mac,
-        },
-    };
+    let params;
+
+    if (!data.mac) {
+        params = {
+            TableName: process.env.MAIN_TABLE,
+        };
+    } else {
+        params = {
+            TableName: process.env.SCAN_TABLE,
+            FilterExpression: 'mac = :mac',
+            ExpressionAttributeValues: {
+                ':mac': data.mac,
+            },
+        };
+    }
 
     // fetch all wifi-scan from the database
     dynamoDb.scan(params, (error, result) => {
