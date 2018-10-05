@@ -78,10 +78,9 @@ module.exports.create = (event, context, callback) => {
                     Key: {
                         mac: data.mac,
                     },
-                    UpdateExpression: 'SET ip = :ip, desc = :desc, updatedAt = :updatedAt',
+                    UpdateExpression: 'SET ip = :ip, updatedAt = :updatedAt',
                     ExpressionAttributeValues: {
                         ':ip': data.ip,
-                        ':desc': data.desc,
                         ':updatedAt': timestamp,
                     },
                     ReturnValues: 'ALL_NEW',
