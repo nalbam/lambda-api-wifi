@@ -24,8 +24,8 @@ module.exports.create = (event, context, callback) => {
         TableName: process.env.SCAN_TABLE,
         Item: {
             id: uuid.v1(),
-            ip: data.ip,
             mac: data.mac,
+            ip: data.ip,
             desc: data.desc,
             checked: false,
             createdAt: timestamp,
