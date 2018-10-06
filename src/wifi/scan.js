@@ -9,17 +9,17 @@ module.exports.scan = (event, context, callback) => {
 
     let params;
 
-    if (typeof data.mac !== 'string') {
-        params = {
-            TableName: process.env.MAIN_TABLE,
-        };
-    } else {
+    if (data.mac && typeof data.mac === 'string') {
         params = {
             TableName: process.env.SCAN_TABLE,
             FilterExpression: 'mac = :mac',
             ExpressionAttributeValues: {
                 ':mac': data.mac,
             },
+        };
+    } else {
+        params = {
+            TableName: process.env.MAIN_TABLE,
         };
     }
 
