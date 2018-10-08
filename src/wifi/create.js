@@ -1,7 +1,8 @@
 'use strict';
 
-const uuid = require('uuid');
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+const uuid = require('uuid');
+const moment = require('moment');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -111,6 +112,8 @@ module.exports.create = (event, context, callback) => {
                     },
                 });
             } else {
+                let datetime = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm');
+
                 const params = {
                     TableName: process.env.SCAN_TABLE,
                     Item: {
@@ -118,6 +121,7 @@ module.exports.create = (event, context, callback) => {
                         mac: data.mac,
                         ip: data.ip,
                         desc: data.desc,
+                        datetime: datetime,
                         createdAt: timestamp,
                     },
                 };
