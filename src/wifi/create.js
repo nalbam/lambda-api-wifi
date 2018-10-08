@@ -52,6 +52,7 @@ module.exports.create = (event, context, callback) => {
                     mac: data.mac,
                     ip: data.ip,
                     desc: data.desc,
+                    beacon: data.beacon,
                     checked: false,
                     createdAt: timestamp,
                 },
@@ -78,15 +79,16 @@ module.exports.create = (event, context, callback) => {
                 callback(null, response);
             });
         } else {
-            if (!result.Item.ip || result.Item.ip !== data.ip) {
+            if (result.Item.beacon !== data.beacon || result.Item.ip !== data.ip) {
                 const params = {
                     TableName: process.env.MAIN_TABLE,
                     Key: {
                         mac: data.mac,
                     },
-                    UpdateExpression: 'SET ip = :ip, updatedAt = :updatedAt',
+                    UpdateExpression: 'SET beacon = :beacon, ip = :ip, updatedAt = :updatedAt',
                     ExpressionAttributeValues: {
                         ':ip': data.ip,
+                        ':beacon': data.beacon,
                         ':updatedAt': timestamp,
                     },
                     ReturnValues: 'ALL_NEW',
@@ -121,6 +123,7 @@ module.exports.create = (event, context, callback) => {
                         mac: data.mac,
                         ip: data.ip,
                         desc: data.desc,
+                        beacon: data.beacon,
                         createdAt: timestamp,
                     },
                 };
