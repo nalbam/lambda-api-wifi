@@ -71,7 +71,7 @@ module.exports.create = (event, context, callback) => {
                 }
 
                 // response
-                console.log('saved. ', params.Item);
+                console.log('wifi-main saved. ', params.Item);
                 const response = {
                     statusCode: 200,
                     body: JSON.stringify(params.Item),
@@ -141,7 +141,7 @@ module.exports.create = (event, context, callback) => {
                     }
 
                     // response
-                    console.log('saved. ', params.Item);
+                    console.log('wifi-scan saved. ', params.Item);
                     const response = {
                         statusCode: 200,
                         body: JSON.stringify(params.Item),
