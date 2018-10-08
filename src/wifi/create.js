@@ -112,7 +112,7 @@ module.exports.create = (event, context, callback) => {
                     },
                 });
             } else {
-                let datetime = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm');
+                const datetime = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm');
 
                 const params = {
                     TableName: process.env.SCAN_TABLE,
