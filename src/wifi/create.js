@@ -2,7 +2,7 @@
 
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 const uuid = require('uuid');
-// const moment = require('moment');
+const moment = require('moment');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -114,7 +114,7 @@ module.exports.create = (event, context, callback) => {
                     },
                 });
             } else {
-                // const datetime = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm');
+                const datetime = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm');
 
                 const params = {
                     TableName: process.env.SCAN_TABLE,
@@ -122,8 +122,9 @@ module.exports.create = (event, context, callback) => {
                         id: uuid.v1(),
                         mac: data.mac,
                         ip: data.ip,
-                        desc: data.desc,
+                        desc: result.Item.desc,
                         beacon: data.beacon,
+                        datetime: datetime,
                         createdAt: timestamp,
                     },
                 };
