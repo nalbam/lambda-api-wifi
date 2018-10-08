@@ -2,7 +2,7 @@
 
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 const uuid = require('uuid');
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
