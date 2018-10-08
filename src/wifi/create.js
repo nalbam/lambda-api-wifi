@@ -2,7 +2,7 @@
 
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 const uuid = require('uuid');
-const moment = require('moment');
+// const moment = require('moment');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -98,7 +98,7 @@ module.exports.create = (event, context, callback) => {
                     if (error) {
                         console.error(error);
                     }
-                    console.log(`"${data.mac}" : "${data.ip}"`);
+                    console.log(`"${data.mac}" : "${result}"`);
                 });
             }
 
