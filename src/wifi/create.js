@@ -31,7 +31,7 @@ module.exports.create = (event, context, callback) => {
         },
     };
 
-    // fetch wifi-main from the database
+    // get wifi-main
     dynamoDb.get(params, (error, result) => {
         // handle potential errors
         if (error) {
@@ -57,7 +57,7 @@ module.exports.create = (event, context, callback) => {
                 },
             };
 
-            // write the wifi-main to the database
+            // put wifi-main
             dynamoDb.put(params, (error) => {
                 // handle potential errors
                 if (error) {
@@ -69,7 +69,7 @@ module.exports.create = (event, context, callback) => {
                     return;
                 }
 
-                // create a response
+                // response
                 console.log('saved. ', params.Item);
                 const response = {
                     statusCode: 200,
@@ -92,7 +92,7 @@ module.exports.create = (event, context, callback) => {
                     ReturnValues: 'ALL_NEW',
                 };
 
-                // update the wifi-main in the database
+                // update wifi-main
                 dynamoDb.update(params, (error, result) => {
                     // handle potential errors
                     if (error) {
@@ -112,7 +112,7 @@ module.exports.create = (event, context, callback) => {
                     },
                 });
             } else {
-                const datetime = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm');
+                // const datetime = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm');
 
                 const params = {
                     TableName: process.env.SCAN_TABLE,
@@ -121,12 +121,11 @@ module.exports.create = (event, context, callback) => {
                         mac: data.mac,
                         ip: data.ip,
                         desc: data.desc,
-                        datetime: datetime,
                         createdAt: timestamp,
                     },
                 };
 
-                // write the wifi-scan to the database
+                // put wifi-scan
                 dynamoDb.put(params, (error) => {
                     // handle potential errors
                     if (error) {
@@ -138,7 +137,7 @@ module.exports.create = (event, context, callback) => {
                         return;
                     }
 
-                    // create a response
+                    // response
                     console.log('saved. ', params.Item);
                     const response = {
                         statusCode: 200,
