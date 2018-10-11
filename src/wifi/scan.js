@@ -20,7 +20,7 @@ module.exports.scan = (event, context, callback) => {
 
         params = {
             TableName: process.env.SCN_TABLE,
-            FilterExpression: 'mac = :mac and scan_date :date1 and :date2',
+            FilterExpression: 'mac = :mac and scan_date between :date1 and :date2',
             ExpressionAttributeValues: {
                 ':mac': data.mac,
                 ':date1': `${data.scan_date} 00:00`,
