@@ -15,7 +15,7 @@ module.exports.scan = (event, context, callback) => {
             data.time_zone = 'Asia/Seoul';
         }
         if (!data.scan_date) {
-            data.scan_date = moment().tz(result.Item.time_zone).format('YYYY-MM-DD');
+            data.scan_date = moment().tz(data.time_zone).format('YYYY-MM-DD');
         }
 
         params = {
