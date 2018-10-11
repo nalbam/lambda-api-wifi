@@ -33,6 +33,11 @@ resource "aws_dynamodb_table" "wifi-scn" {
     type = "S"
   }
 
+  attribute {
+    name = "scan_date"
+    type = "S"
+  }
+
   global_secondary_index {
     name               = "scn_index"
     hash_key           = "mac"
