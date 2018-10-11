@@ -21,7 +21,7 @@ resource "aws_dynamodb_table" "wifi-scn" {
   read_capacity  = 5
   write_capacity = 5
   hash_key       = "id"
-  range_key      = "scn_dt"
+  range_key      = "mac"
 
   attribute {
     name = "id"
@@ -31,6 +31,16 @@ resource "aws_dynamodb_table" "wifi-scn" {
   attribute {
     name = "mac"
     type = "S"
+  }
+
+  global_secondary_index {
+    name               = "scn_index"
+    hash_key           = "mac"
+    range_key          = "scan_date"
+    write_capacity     = 5
+    read_capacity      = 5
+    projection_type    = "INCLUDE"
+    non_key_attributes = ["id"]
   }
 
   tags {
