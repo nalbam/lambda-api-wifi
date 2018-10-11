@@ -1,11 +1,27 @@
 // dynamodb
 
-resource "aws_dynamodb_table" "wifi-scan" {
-  name           = "${var.stage}-${var.name}-scan"
-  read_capacity  = 10
-  write_capacity = 10
+resource "aws_dynamodb_table" "wifi-mac" {
+  name           = "${var.stage}-${var.name}-mac"
+  read_capacity  = 5
+  write_capacity = 5
+  hash_key       = "mac"
+
+  attribute {
+    name = "mac"
+    type = "S"
+  }
+
+  tags {
+    Name = "${var.stage}-${var.name}-mac"
+  }
+}
+
+resource "aws_dynamodb_table" "wifi-scn" {
+  name           = "${var.stage}-${var.name}-scn"
+  read_capacity  = 5
+  write_capacity = 5
   hash_key       = "id"
-  range_key      = "mac"
+  range_key      = "scn_dt"
 
   attribute {
     name = "id"
@@ -18,22 +34,6 @@ resource "aws_dynamodb_table" "wifi-scan" {
   }
 
   tags {
-    Name = "${var.stage}-${var.name}-scan"
-  }
-}
-
-resource "aws_dynamodb_table" "wifi-main" {
-  name           = "${var.stage}-${var.name}-main"
-  read_capacity  = 10
-  write_capacity = 10
-  hash_key       = "mac"
-
-  attribute {
-    name = "mac"
-    type = "S"
-  }
-
-  tags {
-    Name = "${var.stage}-${var.name}-main"
+    Name = "${var.stage}-${var.name}-scn"
   }
 }

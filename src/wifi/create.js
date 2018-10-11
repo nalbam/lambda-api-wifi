@@ -1,6 +1,6 @@
 'use strict';
 
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+const AWS = require('aws-sdk');
 const uuid = require('uuid');
 const moment = require('moment-timezone');
 
@@ -25,13 +25,13 @@ module.exports.create = (event, context, callback) => {
     }
 
     const params = {
-        TableName: process.env.MAIN_TABLE,
+        TableName: process.env.MAC_TABLE,
         Key: {
             mac: data.mac,
         },
     };
 
-    // get wifi-main
+    // get wifi-mac
     dynamoDb.get(params, (error, result) => {
         // handle potential errors
         if (error) {
@@ -46,19 +46,24 @@ module.exports.create = (event, context, callback) => {
         const timestamp = new Date().getTime();
 
         if (!result || !result.Item) {
+            if (!data.time_zone) {
+                data.time_zone = 'Asia/Seoul';
+            }
+
             const params = {
-                TableName: process.env.MAIN_TABLE,
+                TableName: process.env.MAC_TABLE,
                 Item: {
                     mac: data.mac,
                     ip: data.ip,
                     desc: data.desc,
                     beacon: data.beacon,
+                    time_zone: data.time_zone,
                     checked: false,
-                    createdAt: timestamp,
+                    create_time: timestamp,
                 },
             };
 
-            // put wifi-main
+            // put wifi-mac
             dynamoDb.put(params, (error) => {
                 // handle potential errors
                 if (error) {
@@ -71,7 +76,7 @@ module.exports.create = (event, context, callback) => {
                 }
 
                 // response
-                console.log('wifi-main saved. ', params.Item);
+                console.log('wifi-mac saved. ', params.Item);
                 const response = {
                     statusCode: 200,
                     body: JSON.stringify(params.Item),
@@ -81,20 +86,20 @@ module.exports.create = (event, context, callback) => {
         } else {
             if (result.Item.beacon !== data.beacon || result.Item.ip !== data.ip) {
                 const params = {
-                    TableName: process.env.MAIN_TABLE,
+                    TableName: process.env.MAC_TABLE,
                     Key: {
                         mac: data.mac,
                     },
-                    UpdateExpression: 'SET beacon = :beacon, ip = :ip, updatedAt = :updatedAt',
+                    UpdateExpression: 'SET beacon = :beacon, ip = :ip, update_time = :update_time',
                     ExpressionAttributeValues: {
                         ':ip': data.ip,
                         ':beacon': data.beacon,
-                        ':updatedAt': timestamp,
+                        ':update_time': timestamp,
                     },
                     ReturnValues: 'ALL_NEW',
                 };
 
-                // update wifi-main
+                // update wifi-mac
                 dynamoDb.update(params, (error, result) => {
                     // handle potential errors
                     if (error) {
@@ -114,22 +119,22 @@ module.exports.create = (event, context, callback) => {
                     },
                 });
             } else {
-                const datetime = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm');
+                const scan_date = moment().tz(result.Item.time_zone).format('YYYY-MM-DD HH:mm');
 
                 const params = {
-                    TableName: process.env.SCAN_TABLE,
+                    TableName: process.env.SCN_TABLE,
                     Item: {
                         id: uuid.v1(),
                         mac: data.mac,
                         ip: data.ip,
                         desc: result.Item.desc,
                         beacon: data.beacon,
-                        datetime: datetime,
-                        createdAt: timestamp,
+                        scan_date: scan_date,
+                        create_time: timestamp,
                     },
                 };
 
-                // put wifi-scan
+                // put wifi-scn
                 dynamoDb.put(params, (error) => {
                     // handle potential errors
                     if (error) {
@@ -142,7 +147,7 @@ module.exports.create = (event, context, callback) => {
                     }
 
                     // response
-                    console.log('wifi-scan saved. ', params.Item);
+                    console.log('wifi-scn saved. ', params.Item);
                     const response = {
                         statusCode: 200,
                         body: JSON.stringify(params.Item),

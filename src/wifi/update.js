@@ -1,6 +1,6 @@
 'use strict';
 
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+const AWS = require('aws-sdk');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -20,20 +20,20 @@ module.exports.update = (event, context, callback) => {
     const timestamp = new Date().getTime();
 
     const params = {
-        TableName: process.env.MAIN_TABLE,
+        TableName: process.env.MAC_TABLE,
         Key: {
             mac: data.mac,
         },
-        UpdateExpression: 'SET name = :name, checked = :checked, updatedAt = :updatedAt',
+        UpdateExpression: 'SET name = :name, checked = :checked, update_time = :update_time',
         ExpressionAttributeValues: {
             ':name': data.name,
             ':checked': data.checked,
-            ':updatedAt': timestamp,
+            ':update_time': timestamp,
         },
         ReturnValues: 'ALL_NEW',
     };
 
-    // update the wifi-main in the database
+    // update the wifi-mac in the database
     dynamoDb.update(params, (error, result) => {
         // handle potential errors
         if (error) {
