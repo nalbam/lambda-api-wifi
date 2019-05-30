@@ -1,4 +1,4 @@
-// dynamodb
+# dynamodb
 
 resource "aws_dynamodb_table" "wifi-mac" {
   name           = "${var.stage}-${var.name}-mac"
@@ -11,7 +11,7 @@ resource "aws_dynamodb_table" "wifi-mac" {
     type = "S"
   }
 
-  tags {
+  tags = {
     Name = "${var.stage}-${var.name}-mac"
   }
 }
@@ -48,7 +48,7 @@ resource "aws_dynamodb_table" "wifi-scn" {
     non_key_attributes = ["id"]
   }
 
-  tags {
+  tags = {
     Name = "${var.stage}-${var.name}-scn"
   }
 }
